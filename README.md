@@ -1,28 +1,25 @@
-**Looking for maintainers** - I no longer have the capacity to maintain this project. If you would like to take over maintenence, please get in touch. I will either forward to your fork, or add you as a maintainer for the project. Thanks.
-
----
-
-
 # VGGish
-A `torch`-compatible port of [VGGish](https://github.com/tensorflow/models/tree/master/research/audioset)<sup>[1]</sup>, 
-a feature embedding frontend for audio classification models. The weights are ported directly from the tensorflow model, so embeddings created using `torchvggish` will be identical.
+Based on a `torch`-compatible port of [VGGish](https://github.com/tensorflow/models/tree/master/research/audioset)<sup>[1]</sup>, 
+a feature embedding frontend for audio classification models. The weights are ported directly from the tensorflow model, so embeddings will be identical.
 
+## Deep Feature Loss
+We wrap the VGGish model so that it can be used as a deep feature loss, for use as a content-loss, e.g. when training speech enhancement networks. Deep Feature Losses often outperform simple MSE-based loss functions.
 
 ## Usage
 
 ```python
 import torch
+import vggishdfl
 
-model = torch.hub.load('harritaylor/torchvggish', 'vggish')
-model.eval()
+device = 'cuda:0'
 
-# Download an example audio file
-import urllib
-url, filename = ("http://soundbible.com/grab.php?id=1698&type=wav", "bus_chatter.wav")
-try: urllib.URLopener().retrieve(url, filename)
-except: urllib.request.urlretrieve(url, filename)
+dfl = vggishdfl.VGGishDFL()
+dfl = dfl.to(device)
 
-model.forward(filename)
+tgt = torch.randn(8, 16000, device=device)
+est = torch.randn(8, 16000, device=device)
+
+loss = dfl(est, tgt)
 ```
 
 <hr>

@@ -4,9 +4,9 @@ Deep Feature Loss based on vggish network
 import torch
 from torch import nn, Tensor, hub
 from typing import *
-from vggish import VGG, make_layers, Postprocessor
-import vggish_params
-from vggish_input_torch import VGGishPreprocessor
+from .vggish import VGG, make_layers, Postprocessor
+from . import vggish_params
+from .vggish_input_torch import VGGishPreprocessor
 
 MODEL_URLS = {
     'vggish': 'https://github.com/harritaylor/torchvggish/'

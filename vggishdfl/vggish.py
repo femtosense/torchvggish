@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from torch import hub
 
-import vggish_input, vggish_params
+from . import vggish_params
 
 
 class VGG(nn.Module):
@@ -177,13 +177,14 @@ class VGGish(VGG):
         return x
 
     def _preprocess(self, x, fs):
-        if isinstance(x, np.ndarray):
-            x = vggish_input.waveform_to_examples(x, fs)
-        elif isinstance(x, str):
-            x = vggish_input.wavfile_to_examples(x)
-        else:
-            raise AttributeError
-        return x
+        raise NotImplementedError
+        # if isinstance(x, np.ndarray):
+        #     x = vggish_input.waveform_to_examples(x, fs)
+        # elif isinstance(x, str):
+        #     x = vggish_input.wavfile_to_examples(x)
+        # else:
+        #     raise AttributeError
+        # return x
 
     def _postprocess(self, x):
         return self.pproc(x)

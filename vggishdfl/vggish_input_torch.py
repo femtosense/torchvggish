@@ -6,8 +6,8 @@ gradients can be passed through the preprocessing operation
 from torch.nn import functional as F
 import math
 from torch import Tensor, nn
-import mel_features_torch
-import vggish_params
+from . import mel_features_torch
+from . import vggish_params
 from typing import *
 
 class VGGishPreprocessor(nn.Module):
