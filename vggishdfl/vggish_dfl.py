@@ -93,6 +93,21 @@ def normed_mse(pred: Tensor, targ: Tensor, eps=1e-9):
     return num / (den + eps)
 
 class VGGishDFL(nn.Module):
+    """
+    Deep Feature Loss, based on trained VGGish classifier.
+
+    Arguments:
+        urls (dict, optional): torch.hub urls to download weights for the trained classifier,
+            defaults to harritaylor's torch.hub parameters.
+        pretrained (bool, optional): If True, loads pretrained weights from torch.hub.
+         Default True.
+        postprocess (bool, optional): If True, post-processes to calculate vggish embeddings. Default True.
+        progress (bool, optional): If True, displays a progress bar when downloading weights.
+            Default True.
+        hook_relus (bool, optional): If True, Deep Feature Loss is computed as the mean of
+            normalized MSEs for each ReLU activation in the network. Default True.
+        no_param_grad (bool, optional): If True, parameters are frozen. Default True.
+    """
     def __init__(self, urls=None, pretrained=True, postprocess=True,
         progress=True, hook_relus=True, no_param_grad=True):
         super().__init__()
@@ -108,8 +123,8 @@ class VGGishDFL(nn.Module):
 
 
     def forward(self, enh, tgt):
-        with torch.no_grad():
-            tgt_feat, tgt_act = self.vggish(tgt)
+
+        tgt_feat, tgt_act = self.vggish(tgt)
         enh_feat, enh_act = self.vggish(enh)
 
         if not self.hooked:
