@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from torch import hub
 
-from . import vggish_input, vggish_params
+import vggish_input, vggish_params
 
 
 class VGG(nn.Module):
@@ -12,11 +12,11 @@ class VGG(nn.Module):
         self.features = features
         self.embeddings = nn.Sequential(
             nn.Linear(512 * 4 * 6, 4096),
-            nn.ReLU(True),
+            nn.ReLU(False),
             nn.Linear(4096, 4096),
-            nn.ReLU(True),
+            nn.ReLU(False),
             nn.Linear(4096, 128),
-            nn.ReLU(True))
+            nn.ReLU(False))
 
     def forward(self, x):
         x = self.features(x)
@@ -113,7 +113,7 @@ def make_layers():
             layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
         else:
             conv2d = nn.Conv2d(in_channels, v, kernel_size=3, padding=1)
-            layers += [conv2d, nn.ReLU(inplace=True)]
+            layers += [conv2d, nn.ReLU(inplace=False)]
             in_channels = v
     return nn.Sequential(*layers)
 
