@@ -30,6 +30,7 @@ dfl = dfl.to(device)
 tgt = torch.randn(8, 16000, device=device)
 est = torch.randn(8, 16000, device=device)
 
+# estimate is first; target is second
 loss = dfl(est, tgt)
 ```
 
