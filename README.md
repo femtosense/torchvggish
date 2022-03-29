@@ -1,5 +1,5 @@
 # VGGish
-Based on a `torch`-compatible port of [VGGish](https://github.com/tensorflow/models/tree/master/research/audioset)<sup>[1]</sup>, 
+Forked from a [`torch`-compatible port](https://github.com/harritaylor/torchvggish) of [VGGish](https://github.com/tensorflow/models/tree/master/research/audioset)<sup>[1]</sup>, 
 a feature embedding frontend for audio classification models. The weights are ported directly from the tensorflow model, so embeddings will be identical.
 
 ## Deep Feature Loss
