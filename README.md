@@ -1,5 +1,5 @@
-# VGGish
-Based on a `torch`-compatible port of [VGGish](https://github.com/tensorflow/models/tree/master/research/audioset)<sup>[1]</sup>, 
+# VGGish Deep Feature Loss
+Forked from a [`torch`-compatible port](https://github.com/harritaylor/torchvggish) of [VGGish](https://github.com/tensorflow/models/tree/master/research/audioset)<sup>[1]</sup>, 
 a feature embedding frontend for audio classification models. The weights are ported directly from the tensorflow model, so embeddings will be identical.
 
 ## Deep Feature Loss
@@ -39,7 +39,12 @@ loss_per_sample = dfl(est, tgt, reduce=False)
 
 ## Per-Layer vs. Output Loss
 The most important option when configuring the VGGishDFL is the `hook_relu` boolean.
-If `hook_relu` is `True`, the deep feature loss will be computed based on intermediate activations. Each ReLU activation in the VGGish network will be compared between the target and estimate waveforms to compute a per-ReLU MSE. The per-ReLU MSEs are each normalized by the variance of the target activation, and then a total loss is computed by averaging the normalized per-ReLU MSE.
+If `hook_relu` is `True`, the deep feature loss will be computed based on intermediate activations. Each ReLU activation in the VGGish network will be compared between the target and estimate waveforms to compute a per-ReLU MSE. The per-ReLU MSEs are each normalized by the variance of the target activation, and then a total loss is computed by averaging the normalized per-ReLU MSE. 
+
+For a given relu activation, with estimate activation `x_est` and target activation `x_tgt`, the normalized per-ReLU MSE is given as:
+```
+mse_layer = mean((x_tgt - x_est)**2) / mean(x_tgt**2)
+```
 
 If `hook_relu` is `False`, the loss is computed as an MSE from the final output activations of the VGGish network.
 
