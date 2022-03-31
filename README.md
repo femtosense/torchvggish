@@ -32,6 +32,9 @@ est = torch.randn(8, 16000, device=device)
 
 # estimate is first; target is second
 loss = dfl(est, tgt)
+
+# get scores for each example in the batch
+loss_per_sample = dfl(est, tgt, reduce=False)
 ```
 
 ## Per-Layer vs. Output Loss

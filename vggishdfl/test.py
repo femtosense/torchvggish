@@ -1,4 +1,4 @@
-from vggish_dfl import VGGishDFL
+from vggishdfl import VGGishDFL
 import torch
 import math
 
@@ -17,5 +17,5 @@ if __name__ == '__main__':
     print(loss)
 
     est = est - trg
-    loss = loss_fn(est, trg)
+    loss = loss_fn(est, trg, reduce=False)
     print(loss)

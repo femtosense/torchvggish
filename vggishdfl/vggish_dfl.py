@@ -87,9 +87,13 @@ class VGGish(nn.Module):
 
         return feats, acts
 
-def normed_mse(pred: Tensor, targ: Tensor, eps=1e-9):
-    num = (pred - targ).pow(2).sum()
-    den = targ.pow(2).sum()
+def normed_mse(pred: Tensor, targ: Tensor, eps=1e-9,
+    reduce=True):
+    dim = [i for i in range(pred.ndim)]
+    if not reduce:
+        dim = dim[1:]
+    num = (pred - targ).pow(2).sum(dim=dim)
+    den = targ.pow(2).sum(dim=dim)
     return num / (den + eps)
 
 class VGGishDFL(nn.Module):
@@ -122,20 +126,24 @@ class VGGishDFL(nn.Module):
                 w.requires_grad = False
 
 
-    def forward(self, enh, tgt):
+    def forward(self, enh, tgt, reduce=True):
 
         tgt_feat, tgt_act = self.vggish(tgt)
         enh_feat, enh_act = self.vggish(enh)
 
         if not self.hooked:
-            loss = normed_mse(enh_feat, tgt_feat, axis=[1, 2])
+            loss = normed_mse(enh_feat, tgt_feat, reduce=reduce)
 
         else:
             loss = 0
             for e, t in zip(enh_act, tgt_act):
-                loss += normed_mse(e, t)
+                loss += normed_mse(e, t, reduce=reduce)
             loss = loss / len(tgt_act)
 
+        if not reduce:
+            B = enh.shape[0]
+            loss = loss.reshape(B, -1)
+            loss = loss.mean(1)
         return loss
 
 
